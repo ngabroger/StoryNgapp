@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StoryNgapp\n</string>
+    <string name="person">person</string>
+    <string name="password">password</string>
+    <string name="email">email</string>
+    <string name="username">username</string>
+    <string name="button">Button</string>
+    <string name="sign_in_now">Sign In Now</string>
+    <string name="welcome">Welcome!</string>
+    <string name="go_register_and_create_your_first_story">Go Register and Create your first Story</string>
+    <string name="have_an_account">Have An Account?</string>
+    <string name="imagedummy">ImageDummy</string>
+    <string name="userdummy">userdummy</string>
+    <string name="detail_story">Detail Story</string>
+    <string name="description">Description</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="enter_your_story_here">Enter your Story here</string>
+    <string name="send">Send</string>
+</resources>

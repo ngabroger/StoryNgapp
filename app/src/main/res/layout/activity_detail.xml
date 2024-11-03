@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.DetailActivity">
+
+
+    <ImageView
+        android:id="@+id/ivBlurStory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/imagedummy"
+        android:scaleType="fitXY"
+        android:src="@drawable/logostory"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/source_serif_bold"
+                android:text="@string/detail_story"
+                android:textColor="@color/md_theme_scrim"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/backButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                app:cardBackgroundColor="@color/md_theme_primaryContainer"
+                app:cardCornerRadius="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView12"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView12">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView7"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="3dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/imagedummy"
+                        app:srcCompat="@drawable/ic_back" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/ivDetailStory"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="32dp"
+                android:contentDescription="@string/imagedummy"
+                android:transitionName="storyImage"
+                android:scaleType="fitXY"
+                android:src="@drawable/logostory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView12"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView5"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardBackgroundColor="#A1494646"
+                app:cardCornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivDetailStory">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tvUsernameDetailStory"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@android:string/unknownName"
+                        android:textColor="@color/md_theme_primaryContainer"
+                        android:textSize="24sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/description"
+                        android:textColor="@color/md_theme_primaryContainer"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@+id/tvUsernameDetailStory"
+                        app:layout_constraintTop_toBottomOf="@+id/tvUsernameDetailStory" />
+
+                    <TextView
+                        android:id="@+id/tvDescriptionStory"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="@string/imagedummy"
+                        android:textColor="@color/md_theme_primaryContainer"
+                        android:textColorLink="@color/md_theme_primaryContainer"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/textView24"
+                        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </eightbitlab.com.blurview.BlurView>
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/vwBlurLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loadingItem"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="#F7000000"
+
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/animation_loading" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </eightbitlab.com.blurview.BlurView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

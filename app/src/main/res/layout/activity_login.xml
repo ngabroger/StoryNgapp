@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/btnLogin"
+        app:layout_constraintStart_toStartOf="@+id/btnLogin"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin">
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Dont Have an Account?"
+            android:textColor="@color/md_theme_onBackground"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text=" Register Here"
+            android:textColor="@color/md_theme_primaryFixedDim_highContrast"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:fontFamily="@font/source_serif_bold"
+        android:text="Hello Again!"
+        android:textColor="@color/md_theme_onBackground"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Welcome Back, I've Missin You"
+        android:textAlignment="center"
+        android:textColor="@color/md_theme_onBackground"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/edEmailText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:fontFamily="@font/poppins_medium"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/edPasswordText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:fontFamily="@font/poppins_medium"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/edEmailText"
+        app:layout_constraintStart_toStartOf="@+id/edEmailText"
+        app:layout_constraintTop_toBottomOf="@+id/edEmailText"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edPasswordText"
+        tools:ignore="HardcodedText" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingItem"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#80000000"
+
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animation_loading" />
+</androidx.constraintlayout.widget.ConstraintLayout>
