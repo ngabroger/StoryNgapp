@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.widget.addTextChangedListener
 
 class PasswordEditText @JvmOverloads constructor(
     context: Context,
@@ -16,6 +15,7 @@ class PasswordEditText @JvmOverloads constructor(
 
 {
     init {
+        setPadding(40, 40, 30, 40)
         hint = "Password"
         addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, start: Int, count:  Int, after : Int) {

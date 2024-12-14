@@ -4,15 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import com.google.android.gms.maps.model.LatLng
 import com.ngabroger.storyngapp.data.Result
 import com.ngabroger.storyngapp.data.StoryRepository
+import com.ngabroger.storyngapp.data.local.entity.ListStoryItem
 import com.ngabroger.storyngapp.data.local.preference.UserPreferences
 import com.ngabroger.storyngapp.data.response.ErrorResponse
-import com.ngabroger.storyngapp.data.response.ListStoryItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class StoryModel(private val storyRepository: StoryRepository, private val userPreferences: UserPreferences) : ViewModel(){
+class StoryModel(val storyRepository: StoryRepository, val userPreferences: UserPreferences) : ViewModel(){
+
+    val storiesPaging: LiveData<PagingData<ListStoryItem>> = storyRepository.getAllStoriesWithPager()
+
+
     private val _storyResult = MutableLiveData<Result<List<ListStoryItem>>>()
     val storyResult: LiveData<Result<List<ListStoryItem>>> = _storyResult
 
@@ -22,16 +28,9 @@ class StoryModel(private val storyRepository: StoryRepository, private val userP
     private val _name = MutableLiveData<String?>()
     val name: MutableLiveData<String?> = _name
 
-    init {
 
-        getUsername()
-    }
-     fun getStories(){
-        _storyResult.value = Result.Loading
-        viewModelScope.launch {
-            _storyResult.value = storyRepository.getStories()
-        }
-    }
+
+
 
     fun logout(){
         viewModelScope.launch {
@@ -39,7 +38,7 @@ class StoryModel(private val storyRepository: StoryRepository, private val userP
         }
     }
 
-    private fun getUsername() {
+     fun getUsername() {
         viewModelScope.launch {
           val name = userPreferences.getUserName().first()
             _name.value = name
@@ -53,10 +52,10 @@ class StoryModel(private val storyRepository: StoryRepository, private val userP
         }
     }
 
-    fun postStory (description: String, photo: String){
+    fun postStory (description: String, photo: String , latLng: LatLng?){
         _postStoryResult.value = Result.Loading
         viewModelScope.launch {
-            _postStoryResult.value = storyRepository.sendStory(description, photo)
+            _postStoryResult.value = storyRepository.sendStory(description, photo, latLng)
         }
     }
 

@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.AddStoryActivity">
@@ -38,10 +37,10 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/imageView6"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:contentDescription="@string/imagedummy"
                         app:srcCompat="@drawable/ic_back" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -51,13 +50,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/source_serif_bold"
-                android:text="Add Story"
+                android:text="@string/add_story"
                 android:textColorLink="@color/md_theme_scrim"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@+id/backButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/backButton" />
+
+            <Switch
+                android:id="@+id/switchLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:drawableStart="@drawable/ic_location"
+                app:layout_constraintBottom_toBottomOf="@+id/textView11"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView11"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/chooseImage"
@@ -73,6 +83,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView11">
 
                 <ImageView
+                    android:contentDescription="@string/imagedummy"
                     android:id="@+id/imageCurrent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -116,7 +127,7 @@
                             android:id="@+id/edDescriptionText"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:fontFamily="@font/poppins_medium"
+                            android:autofillHints="" android:fontFamily="@font/poppins_medium"
                             android:gravity="start|top"
                             android:hint="@string/enter_your_story_here"
                             android:inputType="textMultiLine"

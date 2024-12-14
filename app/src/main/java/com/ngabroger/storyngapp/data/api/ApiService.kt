@@ -5,7 +5,6 @@ import com.ngabroger.storyngapp.data.response.LoginResponse
 import com.ngabroger.storyngapp.data.response.RegisterResponse
 import com.ngabroger.storyngapp.data.response.StoryResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -14,6 +13,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -34,10 +34,16 @@ interface ApiService {
 
 
     @GET("stories")
-    suspend fun getStories(): Response<StoryResponse>
+    suspend fun getStories(
+        @Query("page") page : Int,
+        @Query("size") size : Int,
+    ): StoryResponse
 
     @GET("stories/{id}")
    suspend fun getStoryById(@Path("id") id: String): Response<StoryResponse>
+
+   @GET("stories")
+   suspend fun getStoriesWithLocation(@Query("location") location: Int = 1): Response<StoryResponse>
 
 
    @Multipart
@@ -45,6 +51,9 @@ interface ApiService {
     suspend fun sendStory(
        @Part("description") description: String,
        @Part file: MultipartBody.Part,
+       @Part("lat") lat: Float?,
+       @Part("lon") lon: Float?
+
     ): Response<ErrorResponse>
 
 }

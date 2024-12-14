@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.ngabroger.storyngapp.data.StoryRepository
 import com.ngabroger.storyngapp.data.api.ApiConfig
+import com.ngabroger.storyngapp.data.local.db.StoryDatabase
 import com.ngabroger.storyngapp.data.local.preference.UserPreferences
 import com.ngabroger.storyngapp.databinding.ActivityLandingBinding
 import com.ngabroger.storyngapp.viewmodel.UserModel
@@ -24,7 +25,8 @@ class LandingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val pref = UserPreferences.getInstance(this)
-        val repository = StoryRepository.getInstance(ApiConfig.getApiServiceWithoutToken())
+        val db = StoryDatabase.getInstance(this)
+        val repository = StoryRepository.getInstance(ApiConfig.getApiServiceWithoutToken(), db)
        val factory = UserModelFactory(repository, pref)
         val viewModel = ViewModelProvider(this, factory)[UserModel::class.java]
         viewModel.getToken()

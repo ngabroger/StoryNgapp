@@ -1,11 +1,12 @@
 package com.ngabroger.storyngapp.data.response
 
 import com.google.gson.annotations.SerializedName
+import com.ngabroger.storyngapp.data.local.entity.ListStoryItem
 
 data class StoryResponse(
 
 	@field:SerializedName("listStory")
-	val listStory: List<ListStoryItem?>? = null,
+	val listStory: List<ListStoryItem> = emptyList(),
 
 	@field:SerializedName("story")
 	val story: ListStoryItem? = null,
@@ -17,26 +18,3 @@ data class StoryResponse(
 	val message: String? = null
 )
 
-data class ListStoryItem(
-
-	@field:SerializedName("photoUrl")
-	val photoUrl: String? = null,
-
-	@field:SerializedName("createdAt")
-	val createdAt: String? = null,
-
-	@field:SerializedName("name")
-	val name: String? = null,
-
-	@field:SerializedName("description")
-	val description: String? = null,
-
-	@field:SerializedName("lon")
-	val lon: Any? = null,
-
-	@field:SerializedName("id")
-	val id: String? = null,
-
-	@field:SerializedName("lat")
-	val lat: Any? = null
-)

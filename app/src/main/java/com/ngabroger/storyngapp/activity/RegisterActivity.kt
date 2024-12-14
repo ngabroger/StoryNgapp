@@ -4,14 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
+import com.ngabroger.storyngapp.costumview.CustomEditText.ValidationType
 import com.ngabroger.storyngapp.data.Result
 import com.ngabroger.storyngapp.data.StoryRepository
 import com.ngabroger.storyngapp.data.api.ApiConfig
+import com.ngabroger.storyngapp.data.local.db.StoryDatabase
 import com.ngabroger.storyngapp.databinding.ActivityRegisterBinding
 import com.ngabroger.storyngapp.viewmodel.UserModel
 import com.ngabroger.storyngapp.viewmodel.UserModelFactory
@@ -22,9 +22,10 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupTextWatcher()
 
-        enableEdgeToEdge()
-        val repository = StoryRepository.getInstance(ApiConfig.getApiServiceWithoutToken())
+        val db = StoryDatabase.getInstance(this)
+        val repository = StoryRepository.getInstance(ApiConfig.getApiServiceWithoutToken(),db)
 
         val factory = UserModelFactory(repository)
         val viewmodel = ViewModelProvider(this, factory)[UserModel::class.java]
@@ -69,6 +70,30 @@ class RegisterActivity : AppCompatActivity() {
             val password = binding.edRegisterPassword.text.toString()
             viewmodel.register(name, email, password)
         }
+        binding.tvToLogin.setOnClickListener {
+            intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
+    }
+
+    private fun setupTextWatcher() {
+        binding.edRegistername.apply {
+            setValidationType(ValidationType.NAME)
+            setInputLayout(binding.textInputLayoutUsername)
+        }
+
+        // Setup for Email
+        binding.edRegisteremail.apply {
+            setValidationType(ValidationType.EMAIL)
+            setInputLayout(binding.textInputLayoutEmail)
+        }
+
+        // Setup for Password
+        binding.edRegisterPassword.apply {
+            setValidationType(ValidationType.PASSWORD)
+            setInputLayout(binding.textInputLayoutPassword)
+        }
     }
 }

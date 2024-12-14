@@ -1,47 +1,66 @@
 package com.ngabroger.storyngapp.activity
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
 import com.ngabroger.storyngapp.data.Result
 import com.ngabroger.storyngapp.databinding.ActivityAddStoryBinding
 import com.ngabroger.storyngapp.viewmodel.StoryModel
 import com.ngabroger.storyngapp.viewmodel.StoryModelFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
+import com.ngabroger.storyngapp.R
 
 class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
     private var currentImageUri: Uri? = null
     private var currentImageFile: File? = null
+    private var latLng: LatLng? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val cameraGranted = permissions[android.Manifest.permission.CAMERA] ?: false
-        val storageGranted = permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+        val cameraGranted = permissions[Manifest.permission.CAMERA] == true
+        val storageGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true
 
-        if (cameraGranted && storageGranted) {
-            // Izin diberikan, bisa melanjutkan ke pemilihan gambar
-            openImageChooser()
-        } else {
-            Toast.makeText(this, "Camera and storage permissions are required", Toast.LENGTH_SHORT).show()
-            finish() // Menutup activity jika izin ditolak
+        when {
+            cameraGranted && storageGranted -> {
+
+                openImageChooser(includeCamera = true, includeGallery = true)
+            }
+            !cameraGranted -> {
+
+                showPermissionDeniedMessage("Camera permission is required.")
+            }
+            !storageGranted -> {
+                openImageChooser(includeCamera = false, includeGallery = true)            }
+            else ->{
+                showPermissionDeniedMessage("Storage permission is required.")
+            }
         }
     }
 
@@ -49,6 +68,8 @@ class AddStoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val factory = StoryModelFactory.getInstance(this)
         val viewModel = ViewModelProvider(this, factory)[StoryModel::class.java]
@@ -58,11 +79,7 @@ class AddStoryActivity : AppCompatActivity() {
             when(it){
                 is Result.Error -> {
                     binding.loadingItem.visibility = View.GONE
-                    SapDialog(this).apply {
-                        titleText = "Not Valid"
-                        messageText = it.error
-                        isCancellable = true
-                    }.build().show()
+                   showErrorDialog(it.error)
                 }
                 Result.Loading -> {
                     binding.loadingItem.visibility = View.VISIBLE
@@ -88,45 +105,77 @@ class AddStoryActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        binding.sendButton.setOnClickListener{
-            val description = binding.edDescriptionText.toString()
-            if (description.isEmpty()){
-                SapDialog(this).apply {
-                    titleText = "Not Valid"
-                    messageText = "Description cannot be empty"
-                    isCancellable = true
-                }.build().show()
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkLocationPermission()
+            } else {
+                latLng = null
+            }
+        }
 
-            }else{
-                currentImageFile?.let { it1 -> viewModel.postStory(description, it1.path) } ?: run {
-                    SapDialog(this).apply {
-                        titleText = "Not Valid"
-                        messageText = "Please choose an image"
-                        isCancellable = true
-                    }.build().show()
-                }
-                Log.e("ERROR", " ${currentImageFile?.path}")
+        binding.sendButton.setOnClickListener {
+            val description = binding.edDescriptionText.text.toString()
+            if (description.isEmpty()) {
+                showErrorDialog("Description cannot be empty")
+            } else if (currentImageFile == null) {
+                showErrorDialog("Please choose an image")
+            } else {
+                val location = if (binding.switchLocation.isChecked) latLng else null
+                viewModel.postStory(description, currentImageFile!!.path, location)
             }
         }
 
     }
 
+    private fun showPermissionDeniedMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", packageName, null)
+        }
+        startActivity(intent)
+    }
 
+    private fun checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+        } else {
+            getLastLocation()
+        }
+    }
+
+    private fun getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) {
+                        latLng = LatLng(location.latitude, location.longitude)
+                        Log.d("Location", "Lat: ${location.latitude}, Lng: ${location.longitude}")
+                    } else {
+                        Toast.makeText(this, "Unable to get last location", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to get location", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
 
 
     private fun checkPermissionsAndOpenChooser() {
-        val permissions = arrayOf(
-            android.Manifest.permission.CAMERA,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
-        )
+        val cameraPermission = Manifest.permission.CAMERA
+        val cameraGranted = checkSelfPermission(cameraPermission) == PackageManager.PERMISSION_GRANTED
 
+        when {
+            cameraGranted -> {
+                openImageChooser(includeCamera = true, includeGallery = true)
+            }
+            else -> {
 
-        if (permissions.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }) {
-            openImageChooser()
-        } else {
-
-            requestPermissionLauncher.launch(permissions)
+                requestPermissionLauncher.launch(arrayOf(cameraPermission))
+            }
         }
     }
     private fun uriToFile(uri: Uri): File {
@@ -138,38 +187,54 @@ class AddStoryActivity : AppCompatActivity() {
         return file
     }
 
-    private fun openImageChooser() {
+    private fun showErrorDialog(message: String) {
+        SapDialog(this).apply {
+            titleText = "Not Valid"
+            messageText = message
+            isCancellable = true
+        }.build().show()
+    }
 
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+    private fun openImageChooser(includeCamera: Boolean, includeGallery: Boolean) {
+        val intents = mutableListOf<Intent>()
 
-        val imageFile = createImageFile()
-        currentImageUri = FileProvider.getUriForFile(
-            this,
-            "${applicationContext.packageName}.provider",
-            imageFile
-        )
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra(MediaStore.EXTRA_OUTPUT, currentImageUri)
+        if (includeGallery) {
+            val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intents.add(galleryIntent)
         }
-        currentImageFile = imageFile
 
+        if (includeCamera) {
+            val imageFile = createImageFile()
+            currentImageUri = FileProvider.getUriForFile(
+                this,
+                "${applicationContext.packageName}.provider",
+                imageFile
+            )
+            currentImageFile = imageFile
 
-        val chooserIntent = Intent.createChooser(galleryIntent, "Select Image Source")
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cameraIntent))
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+                putExtra(MediaStore.EXTRA_OUTPUT, currentImageUri)
+            }
+            intents.add(cameraIntent)
+        }
 
-        launcherChooser.launch(chooserIntent)
+        if (intents.isNotEmpty()) {
+            val chooserIntent = Intent.createChooser(intents.removeAt(0), "Select Image Source")
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toTypedArray())
+            launcherChooser.launch(chooserIntent)
+        } else {
+            Toast.makeText(this, "No options available", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun compressImage(imageFile: File?) {
         imageFile?.let {
             val bitmap = BitmapFactory.decodeFile(it.path)
             val outputStream = ByteArrayOutputStream()
-
-
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
 
             var quality = 80
-            while (outputStream.size() > 1_000_000) { // Maksimum 1 MB
+            while (outputStream.size() > 1_000_000) {
                 outputStream.reset()
                 quality -= 5
                 bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
@@ -206,7 +271,11 @@ class AddStoryActivity : AppCompatActivity() {
 
             compressImage(currentImageFile)
         } else {
+
             Log.d("Image Chooser", "No media selected")
+            currentImageFile = null
+            currentImageUri = null
+            binding.imageCurrent.setImageResource(R.drawable.image_chooser)
         }
     }
 }

@@ -1,19 +1,27 @@
 [versions]
-agp = "8.7.1"
+agp = "8.7.2"
 blurview = "version-2.0.5"
+coreTesting = "2.1.0"
 datastore = "1.1.1"
 datastorePreferences = "1.1.1"
 dotlottieAndroid = "0.5.1"
-kotlin = "1.9.24"
-coreKtx = "1.13.1"
+espressoIntents = "3.5.1"
+kotlin = "2.0.0"
+coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
-lottie = "4.2.2"
+kotlinxCoroutinesTest = "1.9.0"
+lottie = "6.0.0"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.1.4"
+
+mockitoCore = "5.6.0"
+monitorVersion = "1.7.2"
+pagingRuntime = "3.3.4"
+playServicesLocation = "21.0.1"
 roomCompiler = "2.6.1"
 roomRuntime = "2.6.1"
 roomKtx = "2.6.1"
@@ -23,15 +31,28 @@ glide = "4.16.0"
 kotlinxCoroutinesAndroid = "1.7.3"
 kotlinxCoroutinesCore = "1.7.1"
 loggingInterceptorVersion = "4.12.0"
+runner = "1.6.2"
 simpleanimationpopup = "1.2.5"
+googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
+playServicesMaps = "18.1.0"
+espressoIdlingResource = "3.6.1"
+monitor = "1.7.2"
 [libraries]
 
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoIntents" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomCompiler" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 blurview = { module = "com.github.Dimezis:BlurView", version.ref = "blurview" }
 dotlottie-android = { module = "com.github.LottieFiles:dotlottie-android", version.ref = "dotlottieAndroid" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 
 logging-interceptor-v493 = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptorVersion" }
@@ -53,8 +74,12 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 simpleanimationpopup = { module = "com.github.alperenbabagil:simpleanimationpopup", version.ref = "simpleanimationpopup" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+androidx-espresso-idling-resource = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "espressoIdlingResource" }
+androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-android-libraries-mapsplatform-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleAndroidLibrariesMapsplatformSecretsGradlePlugin" }
 

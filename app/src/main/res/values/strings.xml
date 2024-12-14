@@ -5,7 +5,6 @@
     <string name="password">password</string>
     <string name="email">email</string>
     <string name="username">username</string>
-    <string name="button">Button</string>
     <string name="sign_in_now">Sign In Now</string>
     <string name="welcome">Welcome!</string>
     <string name="go_register_and_create_your_first_story">Go Register and Create your first Story</string>
@@ -18,4 +17,13 @@
     <string name="login">Login</string>
     <string name="enter_your_story_here">Enter your Story here</string>
     <string name="send">Send</string>
+    <string name="add_story">Add Story</string>
+    <string name="welcome_ngabroger">Welcome, ngabroger</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="no_stories_available">No stories available.</string>
+    <string name="password_cannot_be_empty">Password Cannot Be Empty\n</string>
+    <string name="password_must_be_at_least_8_characters">Password Must be atleast 8 Characters\n</string>
+    <string name="name_cannot_be_empty">Name Cannot Be Empty\n</string>
+    <string name="email_cannot_be_empty">Email Cannot Be Empty\n</string>
+    <string name="email_is_not_valid">Email Is Not Valid\n</string>
 </resources>

@@ -9,7 +9,8 @@ import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
 import com.bumptech.glide.Glide
 import com.ngabroger.storyngapp.R
 import com.ngabroger.storyngapp.data.Result
-import com.ngabroger.storyngapp.data.response.ListStoryItem
+import com.ngabroger.storyngapp.data.local.entity.ListStoryItem
+
 import com.ngabroger.storyngapp.databinding.ActivityDetailBinding
 import com.ngabroger.storyngapp.viewmodel.StoryModel
 import com.ngabroger.storyngapp.viewmodel.StoryModelFactory

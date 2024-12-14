@@ -9,9 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
+import com.ngabroger.storyngapp.costumview.CustomEditText.ValidationType
 import com.ngabroger.storyngapp.data.Result
 import com.ngabroger.storyngapp.data.StoryRepository
 import com.ngabroger.storyngapp.data.api.ApiConfig
+import com.ngabroger.storyngapp.data.local.db.StoryDatabase
 import com.ngabroger.storyngapp.data.local.preference.UserPreferences
 import com.ngabroger.storyngapp.databinding.ActivityLoginBinding
 import com.ngabroger.storyngapp.viewmodel.UserModel
@@ -25,10 +27,11 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupTextWatcher()
 
         val pref = UserPreferences.getInstance(this)
-
-        val repository = StoryRepository.getInstance(ApiConfig.getApiServiceWithoutToken())
+        val db = StoryDatabase.getInstance(this)
+        val repository = StoryRepository.getInstance(ApiConfig.getApiServiceWithoutToken(),db)
         val factory = UserModelFactory(repository, pref)
         val viewmodel= ViewModelProvider(this, factory)[UserModel::class.java]
 
@@ -86,12 +89,28 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         })
-
+        binding.tvToRegister.setOnClickListener{
+            intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
         binding.btnLogin.setOnClickListener{
             val email = binding.edEmailText.text.toString()
             val password = binding.edPasswordText.text.toString()
             viewmodel.login(email,password)
 
+        }
+    }
+
+    private fun setupTextWatcher(){
+        binding.edEmailText.apply {
+            setValidationType(ValidationType.EMAIL)
+            setInputLayout(binding.textInputLayoutEmailLogin)
+        }
+
+        binding.edPasswordText.apply {
+            setValidationType(ValidationType.PASSWORD)
+            setInputLayout(binding.textInputLayoutPasswordLogin)
         }
     }
 }

@@ -3,6 +3,7 @@ package com.ngabroger.storyngapp.data.di
 import android.content.Context
 import com.ngabroger.storyngapp.data.StoryRepository
 import com.ngabroger.storyngapp.data.api.ApiConfig
+import com.ngabroger.storyngapp.data.local.db.StoryDatabase
 import com.ngabroger.storyngapp.data.local.preference.UserPreferences
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -16,7 +17,8 @@ object Injection {
     fun provideRepository(context: Context): StoryRepository {
         val pref = UserPreferences.getInstance(context)
         val user = runBlocking { pref.getAuth().first() }
+        val db = StoryDatabase.getInstance(context)
         val apiService = ApiConfig.getApiService(user.toString())
-        return StoryRepository.getInstance(apiService, pref)
+        return StoryRepository.getInstance(apiService,db, pref)
     }
 }

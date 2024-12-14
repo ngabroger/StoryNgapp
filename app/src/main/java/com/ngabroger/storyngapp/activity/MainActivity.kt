@@ -3,17 +3,18 @@ package com.ngabroger.storyngapp.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
 import com.ngabroger.storyngapp.adapter.StoryAdapter
-import com.ngabroger.storyngapp.data.Result
+import com.ngabroger.storyngapp.adapter.StoryLoadStateAdapter
 import com.ngabroger.storyngapp.databinding.ActivityMainBinding
 import com.ngabroger.storyngapp.viewmodel.StoryModel
 import com.ngabroger.storyngapp.viewmodel.StoryModelFactory
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -23,14 +24,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        val recycleView:RecyclerView= binding.rvStory
-        recycleView.setHasFixedSize(true)
-        recycleView.layoutManager = LinearLayoutManager(this)
-        adapter = StoryAdapter(listOf())
-        binding.rvStory.adapter=adapter
-
         setContentView(binding.root)
+
+
+//        CREATING A ADAPTER DAWG
+        adapter = StoryAdapter()
+        val footerAdapter = StoryLoadStateAdapter { adapter.retry() }
+        binding.rvStory.layoutManager = LinearLayoutManager(this)
+        binding.rvStory.adapter = adapter.withLoadStateFooter(footerAdapter)
+
+        val factory = StoryModelFactory.getInstance(this)
+        val viewModel =ViewModelProvider(this, factory)[StoryModel::class.java]
+
+       viewModel.storiesPaging.observe(this) {
+           lifecycleScope.launch {
+               adapter.submitData(it)
+           }
+       }
+        lifecycleScope.launch {
+            viewModel.getUsername()
+        }
+
+        adapter.addLoadStateListener { loadState ->
+            lifecycleScope.launch{
+                binding.loadingItem.isVisible = loadState.source.refresh is LoadState.Loading
+                binding.errorView.isVisible = loadState.source.refresh is LoadState.Error
+                binding.emptyView.isVisible = loadState.source.refresh is LoadState.NotLoading &&
+                        adapter.itemCount == 0
+            }
+
+
+
+        }
 
         binding.floatingActionButton.setOnClickListener {
             Intent(this, AddStoryActivity::class.java).also {
@@ -39,38 +64,9 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-        val factory = StoryModelFactory.getInstance(this)
-        val viewModel =ViewModelProvider(this, factory)[StoryModel::class.java]
-
-        viewModel.getStories()
-
-
-
-        viewModel.storyResult.observe(this){
-            when(it){
-                is Result.Error -> {
-                    binding.loadingItem.visibility = View.GONE
-                    SapDialog(this).apply {
-                        titleText = "Not Valid"
-                        messageText = it.error
-                        isCancellable = true
-                    }.build().show()
-                }
-                Result.Loading -> {
-                    binding.loadingItem.visibility = View.VISIBLE
-                    binding.loadingItem.progress = 0f
-                    binding.loadingItem.addAnimatorUpdateListener {animator ->
-                        if (animator.animatedValue as Float >= 0.3){
-                            binding.loadingItem.loop(true)
-                        }
-
-                    }
-                }
-                is Result.Success -> {
-                    binding.loadingItem.visibility = View.GONE
-                    adapter.updateData(it.data)
-                }
+        binding.btnLocation.setOnClickListener {
+            Intent(this, MapsActivity::class.java).also {
+                startActivity(it)
             }
         }
 
@@ -87,15 +83,12 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
     }
     override fun onResume() {
         super.onResume()
-        val factory = StoryModelFactory.getInstance(this)
-        val viewModel =ViewModelProvider(this, factory)[StoryModel::class.java]
+       adapter.refresh()
 
-
-
-        viewModel.getStories()
 
     }
 
